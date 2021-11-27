@@ -16,7 +16,68 @@ crossorigin="anonymous">
 <body>
     
     <div class="wrapper">
-        <div id="emergenteTransaccion"></div>
+        <div id="contenedorTransaccion" class="contenedorTransaccion">
+            <div class="ventanaAddTransaccion">
+                <table style="width: 100%;">
+                    <tr>
+                        <td class="tituloTrans" colspan="2"">TRANSACCION</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="tipoTrans">
+                            Ingreso<input type="radio" name="tipoTrans" value="Ingreso">
+                            Gastos Fijos<input type="radio" name="tipoTrans" value="Gastos Fijos">
+                            Gastos Variables<input type="radio" name="tipoTrans" value="Gastos Variables">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Categoria</td>
+                        <td>
+                            <select id="categoriaTrans">
+                                <option value="Comida">Comida</option>
+                                <option value="Viaje">Viaje</option>
+                                <option value="Entretenimiento">Entretenimiento</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Color</td>
+                        <td><input type="color" id="colorTrans"></td>
+                    </tr>
+                    <tr>
+                        <td>Cuenta</td>
+                        <td>
+                            <select id="cuentaTrans">
+                                <option value="CuentaNombre01">CuentaNombre01</option>
+                                <option value="CuentaNombre02">CuentaNombre02</option>
+                                <option value="CuentaNombre03">CuentaNombre03</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Fecha</td>
+                        <td>
+                            <input type="date" id="fechaTrans">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Nombre</td>
+                        <td>
+                            <input type="text" id="nombreTrans">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Cantidad</td>
+                        <td>
+                            <input type="text" id="cantidadTrans">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: center;"><input type="button" id="guardar" value="Guardar" class="guardar"></td>
+                    </tr>
+                </table>
+                
+            </div>
+        </div>
         <div class="container">
             <div class="title">
             <h1>Prueba</h1>
