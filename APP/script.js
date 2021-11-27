@@ -2,25 +2,8 @@
 
 window.addEventListener('DOMContentLoaded',(event) =>{
   document.getElementById("guardar").addEventListener("click",()=>{addTransaccion()})
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  document.getElementById("addTrans").addEventListener("click",()=>{mostrarVentanaTrans()})
+});
 
 let labels = ['Ingresos','GastosFijos','GastosVariables'];
 let colorHex = ['#A5DC75','#DCAA75','#BD75DC'];
@@ -113,16 +96,27 @@ function pintaPastel(ingreso,gastoFijo,gastoVariable) {
     }
   })
 }
-
-//Funcion hacer transaccion
-
-function addTransaccion() {
-  let categoria = document.getElementById('categoriaTrans').value;
-  let color = document.getElementById('colorTrans').value;
-  let cuenta = document.getElementById('cuentaTrans').value;
-  let fecha = document.getElementById('fechaTrans').value;
-  let nombre = document.getElementById('nombreTrans').value;
-  let cantidad = document.getElementById('cantidadTrans').value;
-  
-  const transaccion = new Transaccion(tipo,categoria,color,cuenta,fecha,nombre,cantidad);
+function mostrarVentanaTrans() {
+  let ventana = document.getElementById("contenedorTransaccion");
+  ventana.classList.remove("ocultar");
+  ventana.classList.add("contenedorTransaccion");
 }
+function ocultarVentanaTrans() {
+  let ventana = document.getElementById("contenedorTransaccion");
+  ventana.classList.remove("contenedorTransaccion");
+  ventana.classList.add("ocultar");
+  
+}
+//Funcion hacer transaccion
+  function addTransaccion() {
+    let categoria = document.getElementById('categoriaTrans').value;
+    let color = document.getElementById('colorTrans').value;
+    let cuenta = document.getElementById('cuentaTrans').value;
+    let fecha = document.getElementById('fechaTrans').value;
+    let nombre = document.getElementById('nombreTrans').value;
+    let cantidad = document.getElementById('cantidadTrans').value;
+    let tipo = document.getElementsByName("tipoTrans").value;
+    
+    const transaccion = new Transaccion(tipo,categoria,color,cuenta,fecha,nombre,cantidad);
+    ocultarVentanaTrans();
+  }
