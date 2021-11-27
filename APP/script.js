@@ -1,15 +1,31 @@
 //Javier de la Rubia Sánchez
 
 window.addEventListener('DOMContentLoaded',(event) =>{
-  document.getElementById("guardar").addEventListener("submit",()=>{addTransaccion({
-                                                                                    
-                                                                                    tipo : document.getElementById("tipoTrans").value,
-                                                                                    categoria : document.getElementById('categoriaTrans').value,
-                                                                                    cantidad : document.getElementById('cantidadTrans').value,
-                                                                                    nombre : document.getElementById('nombreTrans').value,
-                                                                                    fecha : document.getElementById('fechaTrans').value,
-                                                                                    color : document.getElementById('colorTrans').value 
-                                                                                    })})
+  document.getElementById("guardar").addEventListener("click",(e)=>{
+      let valido = true;
+      if (confirm("¿Estas seguro de enviar el formulario?")){      
+          if (validarCantidadTrans()&validarFechaTrans()&validarNombreTrans()) {
+              addTransaccion({                                                                      
+              tipo : document.getElementById("tipoTrans").value,
+              categoria : document.getElementById('categoriaTrans').value,
+              cantidad : document.getElementById('cantidadTrans').value,
+              nombre : document.getElementById('nombreTrans').value,
+              fecha : document.getElementById('fechaTrans').value,
+              color : document.getElementById('colorTrans').value });
+
+          }else{
+              valido = false;
+              e.preventDefault();
+          }
+      }else{
+          valido = false;
+          e.preventDefault();
+      }
+      return valido;
+  })
+
+
+
   document.getElementById("addTrans").addEventListener("click",()=>{mostrarVentanaTrans()})
   document.getElementById("crearCuenta").addEventListener("click",()=>{iniciarlizarDatos()})
  });
@@ -18,6 +34,7 @@ window.addEventListener('DOMContentLoaded',(event) =>{
   let cuenta_DOM;
   function iniciarlizarDatos() {
       localStorage.setItem('cuenta',JSON.stringify(cuenta));
+      document.location.reload(true);
   };
  const cuenta={
       ingreso : 0,
@@ -83,6 +100,7 @@ window.addEventListener('DOMContentLoaded',(event) =>{
         let fontSize = (height / 114).toFixed(2);
         ctx.font = fontSize + "em sans-serif";
         ctx.textBaseline = "middle";
+        ctx.fillStyle = '#FFFF';
         let text = cuenta.ingreso-cuenta.gastoFijo-cuenta.gastoVariable ,
             textX = Math.round((width - ctx.measureText(text).width) / 2),
             textY = height / 2;
@@ -127,18 +145,80 @@ function ocultarVentanaTrans() {
 }
 //Funcion hacer transaccion 
   function addTransaccion(transaccion) {
-      cuentaLocal = JSON.parse(localStorage.getItem('cuenta'));
-      console.log("Putita"+cuentaLocal);
-      if (transaccion.tipo=='Ingreso') {
-        cuentaLocal.ingreso=+transaccion.cantidad;
-      }else if (transaccion.tipo=='Gastos Fijos') {
-        cuentaLocal.gastoFijo=+transaccion.cantidad;
-      } else {
-        cuentaLocal.gastoVariable=+transaccion.cantidad;
-      }
-      cuentaLocal.listaTrans.push(transaccion);
+    cuentaLocal = JSON.parse(localStorage.getItem('cuenta'));
+    if (transaccion.tipo=='Ingreso') {
+      cuentaLocal.ingreso=cuentaLocal.ingreso+(+transaccion.cantidad);
+    }else if (transaccion.tipo=='Gastos Fijos') {
+      cuentaLocal.gastoFijo=cuentaLocal.gastoFijo+(+transaccion.cantidad);
+    } else {
+      cuentaLocal.gastoVariable=cuentaLocal.gastoVariable+(+transaccion.cantidad);
+    }
+    cuentaLocal.listaTrans.push(transaccion);
 
     localStorage.setItem('cuenta', JSON.stringify(cuentaLocal));
     pintaPastel(cuentaLocal.listaTrans);
     ocultarVentanaTrans();
+    document.location.reload(true);
   }
+
+
+//---------------------------
+//OBJETO ERRORES
+//---------------------------
+
+let errores_DOM=document.getElementById("errores");
+const errores={
+  nombre:"",
+  cantidad:0,
+  fecha:""
+};
+function imprimeErrores() {
+  let text = '';
+  Object.keys(errores).forEach((key)=>{
+      if(errores[key]){
+          text += `<p> ${key}: ${errores[key]}</p>`;
+      }
+  });
+  errores_DOM.innerHTML="";
+  errores_DOM.innerHTML=text;     
+}
+
+
+
+//---------------------------
+//VALIDACIONES DEL FORMULARIO
+//---------------------------
+
+function validarNombreTrans() {
+    let valido=true;
+    if (document.getElementById("nombreTrans").value==""||!(isNaN(document.getElementById("nombreTrans").value))) {
+      errores.nombre=" formato incompatible";
+      valido=false;
+    }else{
+      errores.nombre="";
+    }
+    imprimeErrores();
+    return valido;
+}
+function validarCantidadTrans() {
+  let valido=true;
+  if (document.getElementById("cantidadTrans").value==0||(isNaN(document.getElementById("cantidadTrans").value))) {
+    errores.cantidad=" formato incompatible";
+    valido=false;
+  }else{
+    errores.cantidad="";
+  }
+  imprimeErrores();
+  return valido;
+}
+function validarFechaTrans() {
+  let valido=true;
+  if (document.getElementById("fechaTrans").value=="") {
+    errores.fecha=" Incompleto";
+    valido=false;
+  }else{
+    errores.fecha="";
+  }
+  imprimeErrores();
+  return valido;
+}
