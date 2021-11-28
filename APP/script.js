@@ -23,11 +23,10 @@ window.addEventListener('DOMContentLoaded',(event) =>{
       }
       return valido;
   })
-
-
-
   document.getElementById("addTrans").addEventListener("click",()=>{mostrarVentanaTrans()})
   document.getElementById("crearCuenta").addEventListener("click",()=>{iniciarlizarDatos()})
+  document.getElementById("mostrarLista").addEventListener("click",()=>{mostrarListaTransacciones()})
+ 
  });
 
 //Objeto cuenta corriente
@@ -57,7 +56,7 @@ window.addEventListener('DOMContentLoaded',(event) =>{
   function pintaPastel(listaTrans) {
     const cuenta= JSON.parse(localStorage.getItem('cuenta'));
     document.getElementById("chart-wrapper").innerHTML="";
-    document.getElementById("chart-wrapper").innerHTML='<canvas id="myChart"></canvas>';
+    document.getElementById("chart-wrapper").innerHTML='<canvas id="myChart" class="pie"></canvas>';
     let ctx = document.getElementById("myChart").getContext("2d");
     let myChart = new Chart(ctx, {
       type: 'doughnut',
@@ -221,4 +220,15 @@ function validarFechaTrans() {
   }
   imprimeErrores();
   return valido;
+}
+function mostrarListaTransacciones() {
+  let cuenta = JSON.parse(localStorage.getItem('cuenta'));
+  console.log("hoola");
+  let text="";
+  cuenta.listaTrans.forEach(element => {
+    text += `<article class='trans'> ${element}: ${element[key]}</article>`;
+  });
+  let listaTransacciones_DOM= document.getElementById("listaTransacciones");
+  listaTransacciones_DOM.innerHTML="";
+  listaTransacciones_DOM.innerHTML=text; 
 }

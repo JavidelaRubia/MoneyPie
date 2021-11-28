@@ -14,17 +14,16 @@
     <title>MoneyPie</title>
 </head>
 <body>
-    
-    
     <nav>
-        
-        <li class="menu" ><img src="/IMG/menu.png" alt="menu" width="50px">
-            <ul><li><a href="index.html">Inicio</a></li>
-            <li><a href="/PAGES/cuentas.html">Cuentas</a></li>
-            <li><a href="">Añadir Cuenta</a></li>
-            <li><a href="/PAGES/closed.html""></a>Cerrar Sesion</li></ul>
-        </li>
+        <a href="index.html"><img src="/IMG/grafico-circular.png" alt="graficoCircular" width="50px" height="50px"></a>
+        <a href="/PAGES/"><img src="/IMG/add.png" alt="aniadir" width="50px" height="50px"></a>
+        <a href="/PAGES/cuentas.html"><img src="/IMG/tarjeta-de-credito (1).png" alt="graficoCircular" width="50px" height="50px"></a>
+        <a href="/PAGES/closed.html"><img src="/IMG/poder.png" alt="graficoCircular" width="50px" height="50px"></a>
     </nav>
+    <div class="usuario">
+        <h1>Cuenta de Prueba</h1>
+        <h3>Usuario</h3>
+    </div>
     <div class="wrapper">
         <div id="contenedorTransaccion" class="ocultar">
             <div class="ventanaAddTransaccion">
@@ -93,12 +92,9 @@
                 </div>
             </div>
         </div>
+        
         <div class="container">
-            <div class="title">
-            <h1>MoneyPie - Cuenta de Prueba</h1>
-            </div>
-            <button class="boton" type="button" id="addTrans">Ingresar</button> 
-            <button class="boton" type="button" id="crearCuenta">Crear Cuenta</button> 
+            
             <div id="chart-wrapper" class="chart-wrapper">
                 <canvas id="myChart" class="pie"></canvas>
             </div>
@@ -106,7 +102,11 @@
         </div>
         
     </div>
-
+    <div class="botones">
+    <button class="boton" type="button" id="addTrans">Ingresar</button></br>
+    <button class="boton" type="button" id="crearCuenta">Crear Cuenta</button> 
+    </div>
+    
 </body>
 
 <script src="/APP/script.js"></script>
