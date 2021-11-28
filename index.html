@@ -85,6 +85,9 @@
                         <td>Categoria</td>
                         <td>
                             <select id="categoriaTrans">
+                                <option value="Agua">Agua</option>
+                                <option value="Gas">Gas</option>
+                                <option value="Electricidad">Electricidad</option>
                                 <option value="Salario">Salario</option>
                                 <option value="Prima">Prima</option>
                                 <option value="Herencia">Herencia</option>
@@ -126,9 +129,7 @@
                 </div>
             </div>
         </div>
-        
         <div class="container">
-            
             <div id="chart-wrapper" class="chart-wrapper">
                 <canvas id="myChart" class="pie"></canvas>
             </div>
@@ -137,10 +138,13 @@
         
     </div>
     <div class="botones">
-    <button class="boton" type="button" id="addTrans" >Ingresar</button></br>
+    <button class="boton" type="button" id="addTrans">Nueva Transaccion</button></br>
     </div>
     
 </body>
-
+<footer>
+    <img src="/IMG/logoPieSombra.png" alt="logo" width="90px">
+    <h3>MoneyPie</h3>
+</footer>
 <script src="APP/script.js"></script>
 </html>
