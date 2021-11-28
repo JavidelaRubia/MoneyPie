@@ -9,21 +9,61 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" 
     rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" 
     crossorigin="anonymous">
-    <link rel="stylesheet" href="/CSS/style.css">
+    <link rel="stylesheet" href="CSS/style.css">
+    <link rel="shortcut icon" href="IMG/presentacion-grafica.png" type="image/x-icon">
     <script src="https://use.fontawesome.com/c2ce67ebea.js"></script>
     <title>MoneyPie</title>
 </head>
 <body>
     <nav>
-        <a href="index.html"><img src="/IMG/grafico-circular.png" alt="graficoCircular" width="50px" height="50px"></a>
-        <a href="/PAGES/"><img src="/IMG/add.png" alt="aniadir" width="50px" height="50px"></a>
-        <a href="/PAGES/cuentas.html"><img src="/IMG/tarjeta-de-credito (1).png" alt="graficoCircular" width="50px" height="50px"></a>
-        <a href="/PAGES/closed.html"><img src="/IMG/poder.png" alt="graficoCircular" width="50px" height="50px"></a>
+        <a href="index.html"><img src="IMG/grafico-circular.png" alt="graficoCircular" width="50px" height="50px"></a>
+        <a id="crearCuenta"><img src="IMG/add.png" alt="aniadir" width="50px" height="50px"></a>
+        <a href="PAGES/cuentas.html"><img src="IMG/tarjeta-de-credito (1).png" alt="graficoCircular" width="50px" height="50px"></a>
+        <a href="PAGES/closed.html"><img src="IMG/poder.png" alt="graficoCircular" width="50px" height="50px"></a>
     </nav>
     <div class="usuario">
-        <h1>Cuenta de Prueba</h1>
-        <h3>Usuario</h3>
+        <article class='nombreCuenta' id="tituloCuenta"></article>
+        <article class='selectSlot'>
+            <select id="selectSlot">
+                <option value="1">Slot-01</option>
+                <option value="2">Slot-02</option>
+                <option value="3">Slot-03</option>
+            </select>
+        </article>
     </div>
+    
+    <div id="contenedorCreadorCuenta" class="ocultar">
+        <div class="ventanaCreadorCuenta">
+            <table style="width: 100%;">
+                <tr>
+                    <td class="tituloCuenta" colspan="2"">NUEVA CUENTA</td>
+                </tr>
+                <tr>
+                    <td>Nombre</td>
+                    <td>
+                        <input type="text" id="nombreCuenta">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Slot Cuenta</td>
+                    <td>
+                        <select id="slotCuenta">
+                            <option value="1">Slot-01</option>
+                            <option value="2">Slot-02</option>
+                            <option value="3">Slot-03</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="button" id="guardarCuenta" value="Guardar" class="guardar"></td>
+                    <td><a href="index.html"><input type="button" id="volver" value="Cancelar" class="guardar"></a></td>
+                </tr>
+            </table>
+            <div id="errores1" class="errorCuenta">     
+            </div>
+        </div>
+    </div>
+    <!-- Ventana Emergente creador de transaccion -->
     <div class="wrapper">
         <div id="contenedorTransaccion" class="ocultar">
             <div class="ventanaAddTransaccion">
@@ -45,23 +85,17 @@
                         <td>Categoria</td>
                         <td>
                             <select id="categoriaTrans">
+                                <option value="Salario">Salario</option>
+                                <option value="Prima">Prima</option>
+                                <option value="Herencia">Herencia</option>
                                 <option value="Comida">Comida</option>
                                 <option value="Viaje">Viaje</option>
                                 <option value="Entretenimiento">Entretenimiento</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Color</td>
-                        <td><input type="color" id="colorTrans"></td>
-                    </tr>
-                    <tr>
-                        <td>Cuenta</td>
-                        <td>
-                            <select id="cuentaTrans">
-                                <option value="CuentaNombre01">CuentaNombre01</option>
-                                <option value="CuentaNombre02">CuentaNombre02</option>
-                                <option value="CuentaNombre03">CuentaNombre03</option>
+                                <option value="Deporte">Deporte</option>
+                                <option value="Regalo">Regalo</option>
+                                <option value="Imprevisto">Imprevisto</option>
+                                <option value="Tecnologia">Tecnologia</option>
+                                <option value="Hipoteca">Hipoteca</option>
                             </select>
                         </td>
                     </tr>
@@ -84,8 +118,8 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><input type="boton" id="guardar" value="Guardar" class="guardar"></td>
-                        <td><a href="index.html"><input type="boton" id="volver" value="Cancelar" class="guardar"></a></td>
+                        <td><input type="button" id="guardar" value="Guardar" class="guardar"></td>
+                        <td><a href="index.html"><input type="button" id="volver" value="Cancelar" class="guardar"></a></td>
                     </tr>
                 </table>
                 <div id="errores" class="error">     
@@ -103,11 +137,10 @@
         
     </div>
     <div class="botones">
-    <button class="boton" type="button" id="addTrans">Ingresar</button></br>
-    <button class="boton" type="button" id="crearCuenta">Crear Cuenta</button> 
+    <button class="boton" type="button" id="addTrans" >Ingresar</button></br>
     </div>
     
 </body>
 
-<script src="/APP/script.js"></script>
+<script src="APP/script.js"></script>
 </html>

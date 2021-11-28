@@ -1,6 +1,8 @@
 //Javier de la Rubia Sánchez
 
 window.addEventListener('DOMContentLoaded',(event) =>{
+  init()
+  document.getElementById("crearCuenta").addEventListener("click",()=>{iniciarlizarDatos()})
   document.getElementById("guardar").addEventListener("click",(e)=>{
       let valido = true;
       if (confirm("¿Estas seguro de enviar el formulario?")){      
@@ -10,9 +12,7 @@ window.addEventListener('DOMContentLoaded',(event) =>{
               categoria : document.getElementById('categoriaTrans').value,
               cantidad : document.getElementById('cantidadTrans').value,
               nombre : document.getElementById('nombreTrans').value,
-              fecha : document.getElementById('fechaTrans').value,
-              color : document.getElementById('colorTrans').value });
-
+              fecha : document.getElementById('fechaTrans').value});
           }else{
               valido = false;
               e.preventDefault();
@@ -23,72 +23,69 @@ window.addEventListener('DOMContentLoaded',(event) =>{
       }
       return valido;
   })
+  document.getElementById("guardarCuenta").addEventListener("click",(e)=>{
+    let valido = true;
+    if (confirm("¿Sustituiras esta cuenta,estas seguro? Si necesitas mas Slots, activa premium")){      
+      if (validarNombreCuenta()) {
+            addCuenta({                                                                      
+            ingreso : 0,
+            gastoFijo : 0,
+            gastoVariable : 0,
+            listaTrans : [],
+            slot:document.getElementById("slotCuenta").value,
+            nombreCuenta :document.getElementById("nombreCuenta").value});
+        }else{
+            valido = false;
+            e.preventDefault();
+        }
+    }else{
+        valido = false;
+        e.preventDefault();
+    }
+    return valido;
+})
   document.getElementById("addTrans").addEventListener("click",()=>{mostrarVentanaTrans()})
-  document.getElementById("crearCuenta").addEventListener("click",()=>{iniciarlizarDatos()})
-  document.getElementById("mostrarLista").addEventListener("click",()=>{mostrarListaTransacciones()})
- 
- });
+  document.getElementById("selectSlot").addEventListener("change",()=>{mostrarNombreCuenta(),pintaPastel()})
+});
 
 //Objeto cuenta corriente
   let cuenta_DOM;
-  function iniciarlizarDatos() {
-      localStorage.setItem('cuenta',JSON.stringify(cuenta));
-      document.location.reload(true);
-  };
  const cuenta={
       ingreso : 0,
       gastoFijo : 0,
       gastoVariable : 0,
       listaTrans : [],
-      nombreCuenta :"CuentaPrueba"
+      nombreCuenta :""
   };
 
-//Obtener lista de transacciones con el parametro concreto
-  function getListaParametro(listaTrans,parametro) {
-    let lista=[];
-    listaTrans.forEach(trans => {
-      lista.push(trans[parametro]);
-    });
-      return lista;
-  }
-
 //Pinta Grafica Pastel
-  function pintaPastel(listaTrans) {
-    const cuenta= JSON.parse(localStorage.getItem('cuenta'));
-    document.getElementById("chart-wrapper").innerHTML="";
-    document.getElementById("chart-wrapper").innerHTML='<canvas id="myChart" class="pie"></canvas>';
-    let ctx = document.getElementById("myChart").getContext("2d");
-    let myChart = new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        datasets: [{
-          data: getListaParametro(cuenta.listaTrans,'cantidad'),
-          backgroundColor: getListaParametro(cuenta.listaTrans,'color')
-        }],
-        labels: getListaParametro(cuenta.listaTrans,'tipo')
-        
-      },
-      options: {
-        elements: {
-          
-        },
-        responsive: true,
-        maintainAspectRatio: false,
-        legend: {
-          position: 'bottom',
-          display: false
-        
-        },
-        plugins: {
-          datalabels: {
-          },
-          title: {
-            display: true,
-            text: 'Chart Title',
+  function pintaPastel() {
+    let slot= document.getElementById("selectSlot").value;
+    const cuentaLocal = JSON.parse(localStorage.getItem(slot));
+    if (cuentaLocal=== null) {
+      document.getElementById("chart-wrapper").innerHTML="";
+    }else{
+      document.getElementById("chart-wrapper").innerHTML="";
+      document.getElementById("chart-wrapper").innerHTML='<canvas id="myChart" class="pie"></canvas>';
+      let ctx = document.getElementById("myChart").getContext("2d");
+      let myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          datasets: [{
+            data: [cuentaLocal.ingreso,cuentaLocal.gastoFijo,cuentaLocal.gastoVariable],
+            backgroundColor: ["#e23e31","#323d40","#2a2a2a"],
             
-          }
+          }],
+          labels: ["Ingresos","Gastos Fijos","Gastos Variables"],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          legend: {
+            position: 'bottom',
+            display: true,
+          },
         }
-      }
     })
     Chart.pluginService.register({
       beforeDraw: function(chart) {
@@ -99,15 +96,16 @@ window.addEventListener('DOMContentLoaded',(event) =>{
         let fontSize = (height / 114).toFixed(2);
         ctx.font = fontSize + "em sans-serif";
         ctx.textBaseline = "middle";
-        ctx.fillStyle = '#FFFF';
-        let text = cuenta.ingreso-cuenta.gastoFijo-cuenta.gastoVariable ,
-            textX = Math.round((width - ctx.measureText(text).width) / 2),
-            textY = height / 2;
+        ctx.fillStyle = '#323d40';
+        let text=totalCuenta();
+        let   textX = Math.round((width - ctx.measureText(text).width) / 2),
+              textY = height / 2;
         ctx.fillText(text, textX, textY);
         ctx.save();
       }
     });
   }
+}
 const TipoTrans = {
   Ingreso : "Ingreso",
   GastosFijos : "Gastos Fijos",
@@ -124,12 +122,37 @@ const Transaccion = {
     categoria : Categoria,
     cantidad : 0,
     nombre : "",
-    fecha : Date,
-    color : ""
+    fecha : Date
    
 }
+function totalCuenta() {
+  let slot= document.getElementById("selectSlot").value;
+  const cuentaLocal = JSON.parse(localStorage.getItem(slot));
+  let vIngreso= cuentaLocal.ingreso;
+  let vGastoFijo=cuentaLocal.gastoFijo;
+  let vGastoVar=cuentaLocal.gastoVariable;
+  let total=0;
+  total=vIngreso-vGastoFijo-vGastoVar;
+  return total;
+}
+function init() {
+  mostrarNombreCuenta();
+  pintaPastel();
+}
 
-pintaPastel(cuenta.listaTrans);
+function mostrarNombreCuenta() {
+  let slot= document.getElementById("selectSlot").value;
+  let cuenta = JSON.parse(localStorage.getItem(slot));
+  let tituloCuenta_DOM=document.getElementById("tituloCuenta");
+  let nombreCuenta="";
+  if (cuenta === null) {
+    nombreCuenta="cuenta no registrada";
+  }else{
+    nombreCuenta=cuenta.nombreCuenta;
+  }
+  tituloCuenta_DOM.innerHTML="";
+  tituloCuenta_DOM.innerHTML=nombreCuenta;
+}
 
 function mostrarVentanaTrans() {
   let ventana = document.getElementById("contenedorTransaccion");
@@ -142,22 +165,29 @@ function ocultarVentanaTrans() {
   ventana.classList.add("ocultar");
   
 }
-//Funcion hacer transaccion 
-  function addTransaccion(transaccion) {
-    cuentaLocal = JSON.parse(localStorage.getItem('cuenta'));
-    if (transaccion.tipo=='Ingreso') {
-      cuentaLocal.ingreso=cuentaLocal.ingreso+(+transaccion.cantidad);
-    }else if (transaccion.tipo=='Gastos Fijos') {
-      cuentaLocal.gastoFijo=cuentaLocal.gastoFijo+(+transaccion.cantidad);
-    } else {
-      cuentaLocal.gastoVariable=cuentaLocal.gastoVariable+(+transaccion.cantidad);
-    }
-    cuentaLocal.listaTrans.push(transaccion);
 
-    localStorage.setItem('cuenta', JSON.stringify(cuentaLocal));
-    pintaPastel(cuentaLocal.listaTrans);
-    ocultarVentanaTrans();
-    document.location.reload(true);
+//Funcion hacer transaccion 
+
+  function addTransaccion(transaccion) {
+    let slot= document.getElementById("selectSlot").value;
+    const cuentaLocal = JSON.parse(localStorage.getItem(slot));
+    console.log(cuentaLocal);
+    if (cuentaLocal === null) {
+      nombreCuenta="cuenta no registrada";
+    }else{
+      if (transaccion.tipo=='Ingreso') {
+        cuentaLocal.ingreso=cuentaLocal.ingreso+(+transaccion.cantidad);
+      }else if (transaccion.tipo=='Gastos Fijos') {
+        cuentaLocal.gastoFijo=cuentaLocal.gastoFijo+(+transaccion.cantidad);
+      } else {
+        cuentaLocal.gastoVariable=cuentaLocal.gastoVariable+(+transaccion.cantidad);
+      }
+      cuentaLocal.listaTrans.push(transaccion);
+      localStorage.setItem(slot, JSON.stringify(cuentaLocal));
+      pintaPastel(cuentaLocal.listaTrans);
+      ocultarVentanaTrans();
+      document.location.reload(true);
+    }
   }
 
 
@@ -183,6 +213,22 @@ function imprimeErrores() {
 }
 
 
+let errores1_DOM=document.getElementById("errores1");
+const errores1={
+  nombre:"",
+};
+
+function imprimeErroresCuenta() {
+  let text = '';
+  Object.keys(errores1).forEach((key)=>{
+      if(errores1[key]){
+          text += `<p> ${key}: ${errores1[key]}</p>`;
+      }
+  });
+  errores1_DOM.innerHTML="";
+  errores1_DOM.innerHTML=text;     
+}
+
 
 //---------------------------
 //VALIDACIONES DEL FORMULARIO
@@ -201,7 +247,7 @@ function validarNombreTrans() {
 }
 function validarCantidadTrans() {
   let valido=true;
-  if (document.getElementById("cantidadTrans").value==0||(isNaN(document.getElementById("cantidadTrans").value))) {
+  if (document.getElementById("cantidadTrans").value==0||(isNaN(document.getElementById("cantidadTrans").value))||(document.getElementById("cantidadTrans").value<=0)) {
     errores.cantidad=" formato incompatible";
     valido=false;
   }else{
@@ -221,14 +267,35 @@ function validarFechaTrans() {
   imprimeErrores();
   return valido;
 }
-function mostrarListaTransacciones() {
-  let cuenta = JSON.parse(localStorage.getItem('cuenta'));
-  console.log("hoola");
-  let text="";
-  cuenta.listaTrans.forEach(element => {
-    text += `<article class='trans'> ${element}: ${element[key]}</article>`;
-  });
-  let listaTransacciones_DOM= document.getElementById("listaTransacciones");
-  listaTransacciones_DOM.innerHTML="";
-  listaTransacciones_DOM.innerHTML=text; 
+
+function addCuenta(cuenta) {
+  localStorage.setItem(cuenta.slot, JSON.stringify(cuenta));
+  ocultarVentanaCuenta();
+  document.location.reload(true);
 }
+
+function mostrarVentanaCuenta() {
+  let ventana = document.getElementById("contenedorCreadorCuenta");
+  ventana.classList.remove("ocultar");
+  ventana.classList.add("contenedorCreadorCuenta");
+}
+function ocultarVentanaCuenta() {
+  let ventana = document.getElementById("contenedorCreadorCuenta");
+  ventana.classList.remove("contenedorCreadorCuenta");
+  ventana.classList.add("ocultar");
+  
+}
+function validarNombreCuenta() {
+  let valido=true;
+  if (document.getElementById("nombreCuenta").value==""||!(isNaN(document.getElementById("nombreCuenta").value))) {
+    errores1.nombre=" formato incompatible";
+    valido=false;
+  }else{
+    errores1.nombre="";
+  }
+  imprimeErroresCuenta();
+  return valido;
+}
+function iniciarlizarDatos() {
+  mostrarVentanaCuenta();
+};
